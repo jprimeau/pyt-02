@@ -1,0 +1,588 @@
+FORMATION FLASK 101
+===================
+
+******************************
+PART I - INTRODUCTION TO FLASK
+******************************
+
+INSTALLATION
+============
+
+Using Virtual Environments
+--------------------------
+-> virtualenv + virtualenvwarapper
+
+
+Installing Python Packages with pip
+-----------------------------------
+-> flask
+
+
+BASIC APPLICATION STRUCTURE
+===========================
+
+A complete Flask application (hello.py, 2a)
+-------------------------------------------
+-> Initialization
+-> Routes and View Functions
+-> Server Startup
+
+
+Flask application with a dynamic Route (hello.py, 2b)
+-----------------------------------------------------
+
+
+Application and Request Contexts (user_agent.py)
+------------------------------------------------
+-> current_app, g, request and session -> during request
+
+>>> from hello import app
+>>> from flask import current_app
+>>> current_app.name
+...
+RuntimeError: working outside of application context
+>>> app_ctx = app.app_context()
+>>> app_ctx.push()
+>>> current_app.name
+'hello'
+>>> app_ctx.pop()
+
+
+Request Dispatching
+-------------------
+>>> from hello import app
+>>> app.url_map
+Map([<Rule '/' (HEAD, OPTIONS, GET) -> index>,
+ <Rule '/static/<filename>' (HEAD, OPTIONS, GET) -> static>,
+ <Rule '/user/<name>' (HEAD, OPTIONS, GET) -> user>])
+
+
+Request Hooks
+-------------
+-> before_first_request, before_requests, after_requests and teardown_request
+
+
+Responses
+---------
+response_bad_request.py
+response_cookie.py
+response_redirect.py
+response_abort.py
+
+
+Flask Extensions
+----------------
+-> Command-line options with Flask-Script
+-> pip install flask-script
+
+
+Using Flask-Script (hello.py, 2c)
+---------------------------------
+-> python hello.py
+-> python hello.py runserver --help
+-> python hello.py runserver --host 0.0.0.0
+
+
+TEMPLATES
+=========
+
+The Jinja2 Template Engine
+--------------------------
+-> Business and presentation logic
+
+
+Rendering a template (hello.py, 3a)
+-----------------------------------
+
+
+Variables
+---------
+<p>A value from a dictionary: {{ mydict['key'] }}.</p>
+<p>A value from a list: {{ mylist[3] }}.</p>
+<p>A value from a list with a variable index: {{ mydict[myintvar] }}.</p>
+<p>A value from an object's method: {{ myobj.somemethod() }}.</p>
+
+
+Filters
+-------
+-> safe, capitalize, lower, upper, title, trim and stripargs
+Hello, {{ name|capitalize }}
+
+
+Control Structures
+------------------
+Conditional:
+    {% if user %}
+        Hello, {{ user }}!
+    {% else %}
+        Hello, Stranger!
+    %}
+
+Loop:
+    <ul>
+        {% for comment in comments %}
+            <li>{{ comment }}</li>
+        {% endfor %}
+    </ul>
+
+Macros:
+    {% macro render_comment(comment) %}
+        <li>{{ comment }}</li>
+    {% endmacro %}
+    
+    <ul>
+        {% for comment in comments %}
+            {{ render_comment(comment) }}
+        {% endfor %}
+    </ul>
+
+Import:
+    {% import 'macros.html' as macros %}
+    <ul>
+        {% for comment in comments %}
+            {{ macros.render_comment(comment) }}
+        {% endfor %}
+    </ul>
+
+Include:
+    {% include 'common.html' %}
+
+Inheritance:
+(base.html)
+    <html>
+    <head>
+        {% block head %}
+        <title>{% block title %}{% endblock %} - My Application</title>
+        {% endblock %}
+    </head>
+    <body>
+        {% block body %}
+        {% endblock %}
+    </body>
+    </html>
+(another.html)
+    {% extends "base.html" %}
+    {% block title %}Index{% endblock %}
+    {% block head %}
+        {{ super() }}
+        <style>
+        </style>
+     {% endblock %}
+     {% block body %}
+     <h1>Hello, World!</h1>
+     {% endblock %}
+
+
+Twitter Bootstrap Integration with Flask-Bootstrap
+--------------------------------------------------
+-> pip install flask-bootstrap
+
+
+Flask-Bootstrap initialization (hello.py, 3b)
+Template that uses Flask-Bootstrap (templates/user.html, 3b)
+------------------------------------------------------------
+
+
+Custom error pages (hello.py 3c)
+Base application template with navigation bar (templates/base.html, 3c)
+Custom code 404 error page using template inheritance (templates/404.html, 3c)
+Simplified page template using template inheritance (templates/user.html, 3c)
+------------------------------------------------------------------------------
+
+
+Links
+-----
+-> url_for('index') -> /
+-> url_for('index', _external=True) -> http://localhost:5000/
+-> url_for('user', name='john', _external=True) -> http://localhost:5000/user/john
+-> url_for('index', page=2) -> /?page=2
+
+
+Static Files
+------------
+-> url_for('static', filename='css/styles.css', _external=True) ->
+    http://localhost:5000/static/css/styles.css
+
+
+favicon definition (templates/base.html, 3d)
+--------------------------------------------
+
+
+Localization of Dates and Times with Flask-Moment
+-------------------------------------------------
+-> pip install flask-moment
+-> http://momentjs.com
+
+
+Initialize Flask-Moment (hello.py, 3e)
+Import moment.js library (templates/base.html, 3e)
+Add a datetime variable (hello.py, 3e)
+Timestamp rendering with Flask-Moment (templates/index.html, 3e)
+----------------------------------------------------------------
+-> {{ moment.lang('es') }}
+-> Server -> UTC
+
+
+WEB FORMS
+=========
+-> pip install flask-wtf (WTForms)
+-> Cross-Site Request Forgery (CSRF) Protection
+
+Flash-WTF configuration (hello.py, 4a)
+Form class definition (hello.py, 4a)
+--------------------------------------
+Field type:
+    StringField, TextAreaField, PasswordField
+    HiddenField
+    DateField, DateTimeField
+    IntegerField, DecimalField, FloatField, BooleanField
+    RadioField, SelectField, SelectMultipleField
+    FileField, SumbitField, FormField, FieldList
+Validator:
+    Email, EqualTo, IPAddress, Length, NumberRange
+    Optional, Required, Regexp, URL, AnyOf, NoneOf
+
+
+HTML Rendering of Forms
+-----------------------
+Simple HTML form:
+    <form method="POST">
+        {{ form.name.label }} {{ form.name() }}
+        {{ form.submit() }}
+    </form>
+With style:
+    <form method="POST">
+        {{ form.name.label }} {{ form.name(id='my-text-field') }}
+        {{ form.submit() }}
+    </form>
+Bootstrap's style:
+    {% import 'bootstrap/wtf.html' as wtf %}
+    {{ wtf.quick_form(form) }}
+
+
+Using Flask-WTF and Flask-Bootstrap to render a form (templates/index.html, 4a)
+Route methods (hello.py, 4a)
+-------------------------------------------------------------------------------
+-> Empty -> Required, Value -> OK
+-> Refresh page with form (submit again?) -> redirect (Post/Redirect/Get pattern)
+
+
+Redirects and user Sessions (hello.py, 4b)
+------------------------------------------
+
+
+Message flashing (hello.py, 4c)
+Flash message rendering (templates/base.html, 4c)
+-------------------------------------------------
+-> Loop: Multiple messages queued
+
+
+DATABASES
+=========
+
+SQL Databases, NoSQL Database: SQL or NoSQ?
+-------------------------------------------
+
+
+Python Database Frameworks
+--------------------------
+-> DB egnines: MySQL, Postgres, SQLite, Redis, MongoDB, CouchDB, etc.
+-> DAL: SQLAlchemy, MongoEngine (+ ORMs or ODM)
+-> Choice: Ease of Use, Performance, Portability, Flash intagration
+-> SQLAlchemy! -> (Engine+ORM) Postgres, MySQL, SQLite...
+
+
+Database Management with Flask-SQLAlchemy
+-----------------------------------------
+-> pip install flask-sqlalchemy
+
+
+Database configuration (hello,py, 5a)
+-------------------------------------
+Database engine:
+    MySQL: mysql://username:password@hostname/database
+    Postgres: postgresql://username:password@hostname/database
+    SQLite (Unix): sqlite:////absolute/path/to/database
+    SQLite (Windows): sqlite:///c:/absolute/path/to/database
+
+
+Role and User model definition (hello.py, 5a)
+---------------------------------------------
+Type name:
+    Integer, SmallInteger, BigInteger
+    Float, Numeric, Boolean
+    String, Text, Unicode, UnicodeText
+    Date, Time, DateTime, Inteval
+    Enum, PickleType, LargeBinary
+Option name:
+    primary_key, unique, index, nullable, default
+
+
+Relationships (hello.py, 5a)
+----------------------------
+Option name:
+    backref, primaryjoin
+    lazy: select, immediate, joined, subquery, noload, dynamic
+    uselist, order_by, secondary, secondaryjoin
+
+
+Database Operations
+-------------------
+
+Creating the Tables
+-------------------
+>>> from hello import db
+>>> db.create_all()
+>>> db.drop_all()
+>>> db.create_all()
+
+
+Inserting Rows
+--------------
+>>> from hello import Role, User
+>>> admin_role = Role(name='Admin')                                                                                                                                                                                                                                               
+>>> mod_role = Role(name='Moderator')                                                                                                                                                                                                                                             
+>>> user_role = Role(name='User')                                                                                                                                                                                                                                                 
+>>> user_john = User(username='john', role=admin_role)
+>>> user_susan = User(username='susan', role=user_role)                                                                                                                                                                                                                           
+>>> user_david = User(username='david', role=user_role)                                                                                                                                                                                                                           
+>>> print admin_role.id
+None
+>>> db.session.add(admin_role)
+>>> db.session.add_all([mod_role, user_role, user_john, user_susan, user_david])                                                                                                                                                                                                  
+>>> db.session.commit()
+>>> print admin_role.id
+1
+>>> print mod_role.id                                                                                                                                                                                                                                                             
+2
+>>> print user_role.id                                                                                                                                                                                                                                                            
+3
+
+
+Modifying Rows
+--------------
+>>> admin_role.name = 'Administrator'
+>>> db.session.add(admin_role)
+>>> db.session.commit()
+
+
+Deleting Rows
+-------------
+>>> db.session.delete(mod_role)
+>>> db.session.commit()
+
+
+Querying Rows
+-------------
+>>> Role.query.all()
+[<Role u'Administrator'>, <Role u'User'>]
+>>> User.query.all()
+[<User u'john'>, <User u'susan'>, <User u'david'>]
+>>> User.query.filter_by(role=user_role).all()
+[<User u'susan'>, <User u'david'>]
+>>> str(User.query.filter_by(role=user_role))
+'SELECT users.id AS users_id, users.username AS users_username, users.role_id AS users_role_id \nFROM users \nWHERE :param_1 = users.role_id'
+>>> user_role = Role.query.filter_by(name='User').first()
+
+Query filters:
+    filter(), filter_by(), limit(), offset(), order_by(), group_by()
+Query executors:
+    all(), first(), first_or_404(), get(), get_or_404(), count(), paginate()
+
+Dynamic relationship:
+>>> users = user_role.users
+>>> users
+<sqlalchemy.orm.dynamic.AppenderBaseQuery object at 0x7fc99903d2d0>
+>>> users[0].role
+<Role u'User'>
+>>> str(users)
+'SELECT users.id AS users_id, users.username AS users_username, users.role_id AS users_role_id \nFROM users \nWHERE :param_1 = users.role_id'
+>>> user_role.users.order_by(User.username).all()
+[<User u'david'>, <User u'susan'>]
+>>> user_role.users.count()
+2
+
+
+Database use in view functions (hello.py, 5b)
+---------------------------------------------
+
+
+Adding a shell context (hello.py, 5c)
+-------------------------------------
+$ python hello.py shell
+>>> app
+<Flask 'hello'>
+>>> db
+<SQLAlchemy engine='sqlite:////home/jprimeau/projects/tutorials/flask/flasky/data.sqlite'>
+>>> User
+<class '__main__.User'>
+
+
+Database Migrations with Flask-Migrate
+--------------------------------------
+-> Alembic!
+-> pip install flask-migrate
+
+
+Flask-Migrate configuration (hello.py, 5d)
+------------------------------------------
+$ python hello.py db init
+
+
+Creating a Migration Script
+---------------------------
+-> upgrade(), downgrade()
+-> revision (manually), migrate (automatically)
+$ python hello.py db migrate -m "initial migration"
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.autogenerate.compare] Detected added table 'roles'
+INFO  [alembic.autogenerate.compare] Detected added table 'users'
+INFO  [alembic.autogenerate.compare] Detected added index 'ix_users_username' on '['username']'
+  Generating /home/jprimeau/projects/tutorials/flask/flasky/migrations/versions/5ad431b5452b_initial_migration.py ... done
+
+Upgrading the Database
+----------------------
+-> After reviewing migration script
+$ python hello.py db upgrade
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 38c4e85512a9, initial migration
+
+
+EMAIL
+=====
+
+Email Support with Flask-Mail
+-----------------------------
+-> pip install flask-mail
+-> MAIL_HOSTNAME, MAIL_PORT, MAIL_USE_TLS, MAIL_USE_SSL, MAIL_USERNAME, MAIL_PASSWORD
+
+
+Flask-Mail configuration for Gmail (hello.py, 6a)
+Flask-Mail initialization (hello.py, 6a)
+-------------------------------------------------
+-> Account credentials not in scripts!
+$ export MAIL_USERNAME=<Spiria username>
+$ export MAIL_PASSWORD=<Spiria password>
+
+NOTE: Use Spiria's SMPT server instead of Gmail's
+-> app.config['MAIL_SERVER'] = 'secure.spiria.com'
+-> app.config['MAIL_PORT'] = 465
+-> app.config['MAIL_USE_TLS'] = False
+-> app.config['MAIL_USE_SSL'] = True
+
+
+Sending Email from the Python Shell
+-----------------------------------
+$ python hello.py shell
+>>> from flask.ext.mail import Message
+>>> from hello import mail
+>>> msg = Message('test subject', sender='jprimeau@spiria.com', recipients=['jprimeau@spiria.com'])
+>>> msg.body = 'text body'
+>>> msg.html = '<b>HTML</b> body'
+>>> with app.app_context():
+...     mail.send(msg)
+...
+
+
+Email support (hello.py, 6a)
+Email example (hello.py, 6a)
+----------------------------
+$ export FLASKY_ADMIN=jprimeau@spiria.com
+
+
+Asynchronous email support (hello.py, 6b)
+-----------------------------------------
+-> Large amount: Celery (http://www.celeryproject.org)
+
+
+LARGE APPLICATION STRUCTURE
+===========================
+
+Project structure
+-----------------
+├── app
+│   ├── email.py
+│   ├── __init__.py
+│   ├── main
+│   │   ├── errors.py
+│   │   ├── forms.py
+│   │   ├── __init__.py
+│   │   └── views.py
+│   ├── models.py
+│   ├── static
+│   │   └── favicon.ico
+│   └── templates
+│       ├── 404.html
+│       ├── 500.html
+│       ├── base.html
+│       ├── index.html
+│       └── mail
+│           ├── new_user.html
+│           └── new_user.txt
+├── config.py
+├── LICENSE
+├── manage.py
+├── migrations
+│   ├── alembic.ini
+│   ├── env.py
+│   ├── README
+│   ├── script.py.mako
+│   └── versions
+│       └── 38c4e85512a9_initial_migration.py
+├── README.md
+├── requirements.txt
+└── tests
+    ├── __init__.py
+    └── test_basics.py
+
+
+Application configuration (config.py, 7a)
+-----------------------------------------
+
+
+Application package constructor (app/__init__.py, 7a)
+Blueprint creation (app/main/__init__.py, 7a)
+Blueprint registration (app/__init__.py, 7a)
+-----------------------------------------------------
+
+
+Blueprint with error handlers (app/main/errors.py, 7a)
+------------------------------------------------------
+-> @main.app_errorhandler()
+
+
+Blueprint with application routes (app/main/views.py, 7a)
+---------------------------------------------------------
+-> @main.route(), url_for('.index') and url_for('main.index')
+
+
+Launch script (manage.py, 7a)
+-----------------------------
+
+
+Requirements file (requirements.txt, 7a)
+----------------------------------------
+-> pip freeze >requirements.txt
+-> pip install -r requirements.txt
+
+
+Unit Tests (tests/test_basics.py, 7a)
+Unit test launcher command (manage.py, 7a)
+------------------------------------------
+-> pyton manage.py test
+
+
+Database setup
+--------------
+-> python manage.py db upgrade
+
+
+************************************************
+PART II - EXAMPLE: A SOCIAL BLOGGING APPLICATION
+************************************************
+
+
+
+
