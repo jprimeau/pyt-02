@@ -1,5 +1,6 @@
-FORMATION FLASK 101
-===================
+==============================
+PYT-02 - INTRODUCTION TO FLASK
+==============================
 
 ******************************
 PART I - INTRODUCTION TO FLASK
@@ -583,6 +584,81 @@ Database setup
 PART II - EXAMPLE: A SOCIAL BLOGGING APPLICATION
 ************************************************
 
+
+User Authentication
+===================
+
+
+Authentication Extensions for Flask
+-----------------------------------
+-> Flask-Login, Werkzeug, itsdangerous
+
+
+Password hashing in User model (app/model.py, 8a)
+-------------------------------------------------
+$ python manage.py shell
+>>> u = User()
+>>> u.password = 'cat'
+>>> u.password_hash
+'pbkdf2:sha1:1000$X7BWMgTT$bfeba6ba4a58beeb7379b14d713be6b8a3ba2d6d'
+>>> u.verify_password('cat')
+True
+>>> u.verify_password('dog')
+False
+>>> u2 = User()
+>>> u2.password = 'cat'
+>>> u2.password_hash
+'pbkdf2:sha1:1000$C3TcePy5$946217bd82f90877cc8604a5f4bea92b859a7bbf'
+
+
+Password hashing tests (test/test_user_model.py, 8a)
+----------------------------------------------------
+
+
+Creating an authentication blueprint (app/auth__init__.py, 8b
+Blueprint routes and view functions (app/auth/views.py, 8b)
+Blueprint attachment (app/__init__.py, 8b)
+-------------------------------------------------------------
+
+
+User Authentication with Flask-Login
+------------------------------------
+-> pip install flask-login
+
+
+Preparing the User Model for Login
+----------------------------------
+-> is_authenticated(), is_active(), is_anonymous(), get_id()
+
+
+Updates to the User model to support user logins (app/models.py, 8c)
+Flask-Login initialization (app/__init__.py, 8c
+User loader callback function (app/models.py, 8c)
+--------------------------------------------------------------------
+
+
+Protecting Routes
+-----------------
+-> @login_required
+from flask.ext.login import login_required
+
+@app.route('/secret')
+@login_required
+def secret():
+    return 'Only authenticated users are allowed!'
+
+
+Login form (app/auth/forms.py, 8c)
+Sign In and Sign Out navigation bar links (app/templates/base.html, 8c)
+Sign In route (app/auth/views.py, 8c)
+Render login form (app/templates/auth/login.html, 8c)
+Sign Out route (app/auth/views.py, 8c)
+Greet the logged-in user (app/templates/index.html, 8c)
+-----------------------------------------------------------------------
+$ python manage.py shell
+>>> u = User(email='jprimeau@spiria.com', username='jprimeau', password='cat')
+>>> db.session.add(u)
+>>> db.session.commit()
 
 
 
