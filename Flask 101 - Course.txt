@@ -831,3 +831,33 @@ Pagination footer for blog post lists (app/templates/index.html, 11d)
 ---------------------------------------------------------------------
 
 
+Rich-Text Posts with Markdown and Flask-PageDown
+------------------------------------------------
+-> PageDown, Flask-PageDown, Markdown, Bleach
+-> pip install flask-pagedown markdown bleach
+
+Flask-PageDown initialization (app/__init__.py, 11e)
+Markdown-enabled post form (app/main/forms.py, 11e)
+Flask-PageDown template declaration (app/index.html, 11e)
+---------------------------------------------------------
+
+
+Markdown text handling in the Post model (app/models.py, 11f)
+Use the HTML version of the post bodies in the template (app/templates/_posts/html, 11f)
+----------------------------------------------------------------------------------------
+
+
+Permanent links to posts (app/main/views.py, 11g)
+Permanent link view (app/templates/_posts.html, 11g)
+Permanent link template (app/templates/post.html, 11g)
+------------------------------------------------------
+
+
+Edit blog post template (app/templates/edit_post.html, 11h)
+Edit blog post route (app/main/views.py, 11h)
+Edit blog post links (app/templates/_posts, 11h)
+-----------------------------------------------------------
+
+
+
+
