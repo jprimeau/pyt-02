@@ -585,7 +585,7 @@ PART II - EXAMPLE: A SOCIAL BLOGGING APPLICATION
 ************************************************
 
 
-User Authentication
+USER AUTHENTICATION
 ===================
 
 
@@ -659,6 +659,92 @@ $ python manage.py shell
 >>> u = User(email='jprimeau@spiria.com', username='jprimeau', password='cat')
 >>> db.session.add(u)
 >>> db.session.commit()
+
+
+User registration form (app/auth/forms.py, 8d)
+User registraton template (app/templates/auth/register.html, 8d)
+Link to the registration page (app/templates/auth/login.html, 8d)
+User registration route (app/auth/views.py, 8d)
+-----------------------------------------------------------------
+
+
+Generating Confirmation Tokens with istdangerous
+------------------------------------------------
+$ python manage.py shell
+>>> from manage import app
+>>> from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+>>> s = Serializer(app.config['SECRET_KEY'], expires_in = 3600)
+>>> token = s.dumps({'confirm':23})
+>>> token
+'eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ1NDM3NzIxMiwiaWF0IjoxNDU0MzczNjEyfQ.eyJjb25maXJtIjoyM30.j3hXTFpdcriX8i3PXtS-_KCRy-rxS3AhHC-pib5Vflc'
+>>> data = s.loads(token)
+>>> data
+{u'confirm': 23}
+
+
+User account confirmation (app/models.py, 8e)
+Registration route with confirmation email (app/auth/views.py, 8e)
+Text body of confirmation email (app/auth/templates/auth/email/confirm.txt, 8e)
+Confirm a user account (app/auth/views.py, 8e)
+Filter unconfirmed accounts in before_app_request (app/auth/views.py, 8e)
+Resend account confirmation email (app/auth/views.py, 8e)
+-------------------------------------------------------------------------------
+
+
+Password Updates (8f)
+---------------------
+app/auth/forms.py
+app/auth/views.py
+app/templates/auth/change_password.html
+app/templates/base.html
+
+
+Password Resets (8g)
+--------------------
+app/auth/forms.py
+app/auth/views.py
+app/models.py
+app/templates/auth/email/reset_password.html
+app/templates/auth/email/reset_password.txt
+app/templates/auth/login.html
+app/templates/auth/reset_password.html
+tests/test_user_model.py
+
+
+Email Address Changes (8h)
+--------------------------
+app/auth/forms.py
+app/auth/views.py
+app/models.py
+app/templates/auth/change_email.html
+app/templates/auth/email/change_email.html
+app/templates/auth/email/change_email.txt
+app/templates/base.html
+tests/test_user_model.py
+
+
+USER ROLES
+==========
+
+
+Role permissions (app/models.py, 9a)
+Permission constants (app/models.py, 9a)
+----------------------------------------
+
+Create roles in the database (app/models.py, 9a)
+------------------------------------------------
+$ python manage.py shell
+>>> Role.insert_roles()
+>>> Role.query.all()
+[<Role u'Moderator'>, <Role u'Administrator'>, <Role u'User'>]
+
+
+Define a default role for users (app/models.py, 9a)
+Evaluate whether a user has a given permission (app/models.py, 9a)
+Custom decorators that check user permissions (app/decorators.py, 9a)
+Adding the Permission class to the template context (app/main/__init__.py, 9a)
+Unit tests for roles and permissions (test/test_user_model.py, 9a)
+------------------------------------------------------------------------------
 
 
 
