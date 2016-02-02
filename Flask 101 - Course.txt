@@ -16,7 +16,7 @@ Using Virtual Environments
 
 Installing Python Packages with pip
 -----------------------------------
--> flask
+-> pip install flask
 
 
 BASIC APPLICATION STRUCTURE
