@@ -747,4 +747,87 @@ Unit tests for roles and permissions (test/test_user_model.py, 9a)
 ------------------------------------------------------------------------------
 
 
+USER PROFILES
+=============
+
+
+User information fields (app/models.py, 10a)
+Refresh last visit time of a user (app/models.py, 10a)
+Ping logged-in user (qpp/auth/views.py, 10a)
+User profile template (app/templates/user.html, 10a)
+Username in navigation bar (app/templates/base.html, 10a)
+---------------------------------------------------------
+
+
+Profile edit form (app/main/forms.py, 10b)
+Profile edit route (app/main/views.py, 10b)
+Profile edit link (app/templates/user.py, 10b)
+----------------------------------------------
+
+Profile editing form for administrators (app/main/forms.py, 10b)
+Profile edit route for administrators (app/main/views.py, 10b)
+Profile edit link for administrators (app/templates/user.html, 10b)
+-------------------------------------------------------------------
+
+
+User Avatars
+------------
+-> http://gravatar.com
+$ python manage.py shell
+>>> import hashlib
+>>> hashlib.md5('jprimeau@spiria.com'.encode('utf-8')).hexdigest()
+'839e83ccd8d92110f537841c2752a45c'
+-> http://gravatar.com/avatar/839e83ccd8d92110f537841c2752a45c
+
+
+Gravatar URL generation (app/models.py, 10c)
+--------------------------------------------
+$ python manage.py shell
+> u = User(email='jprimeau@spiria.com')
+>>> u.gravatar()
+'http://www.gravatar.com/avatar/839e83ccd8d92110f537841c2752a45c?s=100&d=identicon&r=g'
+>>> u.gravatar(size=256)
+'http://www.gravatar.com/avatar/839e83ccd8d92110f537841c2752a45c?s=256&d=identicon&r=g'
+
+
+Avatar in profile page (app/templates/user.html, 10c)
+-----------------------------------------------------
+
+
+Gravatar URL generation with caching of MD5 hashes (app/models.py, 10d)
+-----------------------------------------------------------------------
+
+
+BLOG POSTS
+==========
+
+Post model (app/models.py, 11a)
+Blog post form (app/main/forms.py, 11a)
+Home page template with blog posts (app/templates/index.html, 11a)
+------------------------------------------------------------------
+
+
+Profile page route with blog posts (app/main/views.py, 11b)
+Profile page template with blog posts (app/templates/user.html, 11b)
+--------------------------------------------------------------------
+
+
+Creating Fake Blog Post Data
+----------------------------
+-> pip install forgerypy
+-> requirements -> dev.txt
+
+
+Generate fake users and blog posts (app/models.py, 11c)
+-------------------------------------------------------
+$ python manage.py shell
+>>> User.generate_fake(100)
+>>> Post.generate_fake(100)
+
+
+Paginate the blog post list (app/main/views.py, 11d)
+Pagination template macro (app/templates/_macros.html, 11d)
+Pagination footer for blog post lists (app/templates/index.html, 11d)
+---------------------------------------------------------------------
+
 
